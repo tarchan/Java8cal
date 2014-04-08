@@ -34,10 +34,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -50,7 +50,7 @@ import javafx.scene.layout.GridPane;
 public class CalController implements Initializable {
 
     private static final Logger log = Logger.getLogger(CalController.class.getName());
-    private ObjectProperty<YearMonth> month = new SimpleObjectProperty();
+    private final ObjectProperty<YearMonth> month = new SimpleObjectProperty();
     @FXML
     private Label monthLabel;
     @FXML
@@ -58,29 +58,30 @@ public class CalController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        monthLabel.textProperty().bind(month.asString("%tY/%<tm"));
+        month.addListener((ObservableValue<? extends YearMonth> observable, YearMonth oldValue, YearMonth newValue) -> {
+            if (newValue != null) {
+                updateGrid();
+            }
+        });
         month.set(YearMonth.now());
-        updateGrid();
+        monthLabel.textProperty().bind(month.asString("%tY/%<tm"));
     }
 
     @FXML
     private void onBack(ActionEvent event) {
         month.set(month.get().minusMonths(1));
-        updateGrid();
     }
 
     @FXML
     private void onNext(ActionEvent event) {
         month.set(month.get().plusMonths(1));
-        updateGrid();
     }
 
     @FXML
     private void onToday(MouseEvent event) {
-         month.set(month.get().now());
-         updateGrid();
+        month.set(month.get().now());
     }
-    
+
     private void clearGrid() {
         dayGrid.getChildren().clear();
         DayOfWeek week = DayOfWeek.SUNDAY;
