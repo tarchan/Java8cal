@@ -24,15 +24,20 @@
 package com.mac.tarchan;
 
 import java.net.URL;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 
 /**
  * CalController
@@ -41,28 +46,56 @@ import javafx.scene.input.MouseEvent;
  */
 public class CalController implements Initializable {
 
+    private static final Logger log = Logger.getLogger(CalController.class.getName());
     private ObjectProperty<YearMonth> month = new SimpleObjectProperty();
     @FXML
     private Label monthLabel;
+    @FXML
+    private GridPane dayGrid;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         monthLabel.textProperty().bind(month.asString("%tY/%<tm"));
         month.set(YearMonth.now());
+        updateGrid();
     }
 
     @FXML
     private void onBack(ActionEvent event) {
         month.set(month.get().minusMonths(1));
+        updateGrid();
     }
 
     @FXML
     private void onNext(ActionEvent event) {
         month.set(month.get().plusMonths(1));
+        updateGrid();
     }
 
     @FXML
     private void onToday(MouseEvent event) {
          month.set(month.get().now());
+         updateGrid();
+    }
+    
+    private void updateGrid() {
+        dayGrid.getChildren().clear();
+        int col = 0;
+        int row = 1;
+        YearMonth ym = month.get();
+        LocalDate date = ym.atDay(1);
+        DayOfWeek week = date.getDayOfWeek();
+        log.info(week.toString());
+        col = week.getValue() % 7;
+        for (int i = 1; i <= month.get().lengthOfMonth(); i++) {
+            Label node = new Label("" + i);
+//            node.setAlignment(Pos.CENTER_RIGHT);
+            log.info(String.format("[%s] %s, %s", i, col, row));
+            dayGrid.add(node, col, row);
+            if (++col == 7) {
+                col = 0;
+                row++;
+            }
+        }
     }
 }
