@@ -21,34 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.mac.tarchan;
 
 import java.net.URL;
+import java.time.YearMonth;
 import java.util.ResourceBundle;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
 /**
+ * CalController
  *
- * @author v-togura
+ * @author tarchan
  */
 public class CalController implements Initializable {
-    
+
+    private ObjectProperty<YearMonth> month = new SimpleObjectProperty();
     @FXML
-    private Label label;
-    
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    
+    private Label monthLabel;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+        monthLabel.textProperty().bind(month.asString("%tY/%<tm"));
+        month.set(YearMonth.now());
+    }
+
+    @FXML
+    private void onBack(ActionEvent event) {
+        month.set(month.get().minusMonths(1));
+    }
+
+    @FXML
+    private void onNext(ActionEvent event) {
+        month.set(month.get().plusMonths(1));
+    }
 }
