@@ -27,6 +27,8 @@ import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.chrono.JapaneseDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -60,11 +62,12 @@ public class CalController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         month.addListener((ObservableValue<? extends YearMonth> observable, YearMonth oldValue, YearMonth newValue) -> {
             if (newValue != null) {
-                updateGrid();
+                updateLabel(newValue);
+                updateGrid(newValue);
             }
         });
         month.set(YearMonth.now());
-        monthLabel.textProperty().bind(month.asString(Locale.ENGLISH, "%tY/%<tm%n%<tB"));
+//        monthLabel.textProperty().bind(month.asString(Locale.ENGLISH, "%tY/%<tm%n%<tB"));
     }
 
     @FXML
@@ -82,6 +85,15 @@ public class CalController implements Initializable {
         month.set(YearMonth.now());
     }
 
+    private void updateLabel(YearMonth ym) {
+        JapaneseDate jp = JapaneseDate.from(ym.atEndOfMonth());
+        monthLabel.setText(String.format("%s%n%s%n%s"
+                , ym.format(DateTimeFormatter.ofPattern("yyyy/MM"))
+                , ym.format(DateTimeFormatter.ofPattern("MMMM", Locale.ENGLISH))
+                , jp.format(DateTimeFormatter.ofPattern("Gy年", Locale.JAPANESE))
+        ));
+    }
+
     private void clearGrid() {
         dayGrid.getChildren().clear();
         DayOfWeek week = DayOfWeek.SUNDAY;
@@ -92,20 +104,19 @@ public class CalController implements Initializable {
         }
     }
 
-    private void updateGrid() {
+    private void updateGrid(YearMonth ym) {
         clearGrid();
-        YearMonth ym = month.get();
         LocalDate date = ym.atDay(1);
+        int weekCount = DayOfWeek.values().length;
         DayOfWeek week = date.getDayOfWeek();
-        log.info(week.toString());
-        int col = week.getValue() % 7;
+        log.log(Level.INFO, "first day: {0}", week);
+        int col = week.getValue() % weekCount;
         int row = 1;
         for (int i = 1; i <= ym.lengthOfMonth(); i++) {
             Label node = new Label("" + i);
-//            node.setAlignment(Pos.CENTER_RIGHT);
             log.log(Level.CONFIG, String.format("[%s] %s, %s", i, col, row));
             dayGrid.add(node, col, row);
-            if (++col == 7) {
+            if (++col == weekCount) {
                 col = 0;
                 row++;
             }

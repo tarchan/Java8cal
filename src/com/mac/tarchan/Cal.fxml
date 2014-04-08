@@ -8,7 +8,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="200.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.mac.tarchan.CalController">
   <children>
-    <HBox id="HBox" alignment="CENTER" prefWidth="158.0" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+    <HBox id="HBox" alignment="CENTER" prefWidth="158.0" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
       <children>
         <Button mnemonicParsing="false" onAction="#onBack" text="前" HBox.hgrow="NEVER" />
         <Label fx:id="monthLabel" onMouseClicked="#onToday" text="2014/04" HBox.hgrow="ALWAYS" />
