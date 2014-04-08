@@ -32,6 +32,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 
 /**
  * CalController
@@ -58,5 +59,10 @@ public class CalController implements Initializable {
     @FXML
     private void onNext(ActionEvent event) {
         month.set(month.get().plusMonths(1));
+    }
+
+    @FXML
+    private void onToday(MouseEvent event) {
+         month.set(month.get().now());
     }
 }

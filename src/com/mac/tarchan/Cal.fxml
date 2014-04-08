@@ -11,7 +11,7 @@
     <HBox id="HBox" alignment="CENTER" prefWidth="158.0" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
       <children>
         <Button mnemonicParsing="false" onAction="#onBack" text="前" HBox.hgrow="NEVER" />
-        <Label fx:id="monthLabel" text="2014/04" HBox.hgrow="ALWAYS" />
+        <Label fx:id="monthLabel" onMouseClicked="#onToday" text="2014/04" HBox.hgrow="ALWAYS" />
         <Button mnemonicParsing="false" onAction="#onNext" text="次" HBox.hgrow="NEVER" />
       </children>
     </HBox>
