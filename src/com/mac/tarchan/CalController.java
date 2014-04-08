@@ -64,7 +64,7 @@ public class CalController implements Initializable {
             }
         });
         month.set(YearMonth.now());
-        monthLabel.textProperty().bind(month.asString("%tY/%<tm"));
+        monthLabel.textProperty().bind(month.asString(Locale.ENGLISH, "%tY/%<tm%n%<tB"));
     }
 
     @FXML
@@ -79,7 +79,7 @@ public class CalController implements Initializable {
 
     @FXML
     private void onToday(MouseEvent event) {
-        month.set(month.get().now());
+        month.set(YearMonth.now());
     }
 
     private void clearGrid() {
