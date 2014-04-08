@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.mac.tarchan;
 
 import javafx.application.Application;
@@ -31,8 +30,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
+ * Java8cal
  *
- * @author v-togura
+ * @author tarchan
  */
 public class Java8cal extends Application {
 
@@ -44,9 +44,10 @@ public class Java8cal extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Cal.fxml"));
-        
+
         Scene scene = new Scene(root);
-        
+
+        stage.setTitle("Java8cal");
         stage.setScene(scene);
         stage.show();
     }
@@ -57,5 +58,4 @@ public class Java8cal extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
 }

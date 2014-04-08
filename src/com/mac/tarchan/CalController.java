@@ -27,7 +27,10 @@ import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.TextStyle;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -78,19 +81,28 @@ public class CalController implements Initializable {
          updateGrid();
     }
     
-    private void updateGrid() {
+    private void clearGrid() {
         dayGrid.getChildren().clear();
-        int col = 0;
-        int row = 1;
+        DayOfWeek week = DayOfWeek.SUNDAY;
+        for (int i = 0; i < 7; i++) {
+            Label node = new Label(week.getDisplayName(TextStyle.SHORT, Locale.JAPANESE));
+            dayGrid.add(node, i, 0);
+            week = week.plus(1);
+        }
+    }
+
+    private void updateGrid() {
+        clearGrid();
         YearMonth ym = month.get();
         LocalDate date = ym.atDay(1);
         DayOfWeek week = date.getDayOfWeek();
         log.info(week.toString());
-        col = week.getValue() % 7;
-        for (int i = 1; i <= month.get().lengthOfMonth(); i++) {
+        int col = week.getValue() % 7;
+        int row = 1;
+        for (int i = 1; i <= ym.lengthOfMonth(); i++) {
             Label node = new Label("" + i);
 //            node.setAlignment(Pos.CENTER_RIGHT);
-            log.info(String.format("[%s] %s, %s", i, col, row));
+            log.log(Level.CONFIG, String.format("[%s] %s, %s", i, col, row));
             dayGrid.add(node, col, row);
             if (++col == 7) {
                 col = 0;
