@@ -40,9 +40,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 /**
  * CalController
@@ -107,15 +110,27 @@ public class CalController implements Initializable {
     private void updateGrid(YearMonth ym) {
         clearGrid();
         LocalDate date = ym.atDay(1);
+        LocalDate today = LocalDate.now().plusDays(0);
         int weekCount = DayOfWeek.values().length;
         DayOfWeek week = date.getDayOfWeek();
         log.log(Level.INFO, "first day: {0}", week);
         int col = week.getValue() % weekCount;
         int row = 1;
         for (int i = 1; i <= ym.lengthOfMonth(); i++) {
-            Label node = new Label("" + i);
+            Group g = new Group();
+            Label label = new Label("" + i);
+            g.getChildren().add(label);
+            if (ym.atDay(i).isEqual(today)) {
+//                node.setStyle("-fx-background-color: pink;");
+                Circle circle = new Circle(10);
+                circle.setFill(Color.TRANSPARENT);
+                circle.setStroke(Color.RED);
+                circle.setTranslateX(6);
+                circle.setTranslateY(8);
+                g.getChildren().add(circle);
+            }
             log.log(Level.CONFIG, String.format("[%s] %s, %s", i, col, row));
-            dayGrid.add(node, col, row);
+            dayGrid.add(g, col, row);
             if (++col == weekCount) {
                 col = 0;
                 row++;
